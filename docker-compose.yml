@@ -1,29 +1,65 @@
 version: "3.2"
 services:
+
+# Servicio PHP
+  php:
+    build:
+      context: './bin/php'
+    container_name: php-fpm-dev
+    tty: true
+    restart: always
+    volumes:
+     - ./www/html:/var/www/html
+    working_dir: /var/www/html
+    networks:
+     - backend
+# Servicio Apache
+  apache: 
+    build:
+      context: './bin/apache'
+    container_name: apache_dev
+    networks: 
+      - backend
+      - frontend
+    restart: always
+    ports: 
+      - '80:80'
+      - '443:443'
+    depends_on: 
+       - php
+       - postgres
+    working_dir: /var/www/html
+    tty: true
+    volumes: 
+      - ./www/html:/var/www/html
+      - ./bin/apache/apache.conf:/usr/local/apache2/conf/apache.conf
+      - ./bin/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+# Servicio postgres
   postgres:
     image: postgres:latest
     container_name: postgresprueba
     restart: always
     volumes:
       - ./postgresData:/var/lib/postgresql/data
-    #networks:  
-     # - postgres
+    networks:  
+      - backend
     ports: 
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: 12345 
+      POSTGRES_PASSWORD: 12345
+# Servicio pgadmin4 
   pgadmin4: 
     image: dpage/pgadmin4
     container_name: pgadmin4prueba
     ports: 
-      - 80:80
+      - 8080:80
     environment: 
       PGADMIN_DEFAULT_EMAIL: prueba@prueba.com
       PGADMIN_DEFAULT_PASSWORD: 12345
    # links: 
     #- postgres
-    #networks: 
-     # - postgres
-#networks: 
- # postgres: 
-  #  driver: bridge
+    networks: 
+      - backend
+networks: 
+  backend:
+  frontend:
