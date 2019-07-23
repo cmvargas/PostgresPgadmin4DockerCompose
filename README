@@ -1,7 +1,0 @@
-#Descargar imagen postgres
-
-sudo docker pull postgres:latest
-
-#Ejecutar un contenedor de docker
-
-sudo docker run -d -e POSTGRES_USER=usuario -e POSTGRES_PASSWORD=12345 --name db-my -p 5432:5432  --restart=always postgres
