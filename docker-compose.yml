@@ -1,0 +1,29 @@
+version: "3.2"
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgresprueba
+    restart: always
+    volumes:
+      - ./postgresData:/var/lib/postgresql/data
+    #networks:  
+     # - postgres
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: 12345 
+  pgadmin4: 
+    image: dpage/pgadmin4
+    container_name: pgadmin4prueba
+    ports: 
+      - 80:80
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: prueba@prueba.com
+      PGADMIN_DEFAULT_PASSWORD: 12345
+   # links: 
+    #- postgres
+    #networks: 
+     # - postgres
+#networks: 
+ # postgres: 
+  #  driver: bridge
